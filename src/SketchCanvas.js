@@ -7,10 +7,11 @@ import ReactNative, {
   PanResponder,
   PixelRatio,
   Platform,
-  ViewPropTypes,
   processColor,
 } from 'react-native';
 import isEqual from 'fast-deep-equal/es6';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+
 import { requestPermissions } from './handlePermissions';
 
 const RNSketchCanvas = requireNativeComponent('RNSketchCanvas', SketchCanvas, {
