@@ -21,6 +21,7 @@
   "nativePackage": true,
   "license": "MIT",
   "dependencies": {
+    "deprecated-react-native-prop-types": "^4.1.0",
     "fast-deep-equal": "^3.1.3"
   },
   "peerDependencies": {
