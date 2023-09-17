@@ -21,6 +21,7 @@ const RNSketchCanvas = requireNativeComponent('RNSketchCanvas', SketchCanvas, {
   },
 });
 const SketchCanvasManager = NativeModules.RNSketchCanvasManager || {};
+const SketchCanvasManagerAndroid = NativeModules.SketchCanvasManager || {};
 const config = UIManager.getViewManagerConfig(RNSketchCanvas);
 
 class SketchCanvas extends React.Component {
@@ -275,18 +276,13 @@ class SketchCanvas extends React.Component {
 
   async save(
     imageType,
-    transparent,
     folder,
     filename,
+    transparent,
     includeImage,
     includeText,
-    cropToImageSize
+    cropToImageSize,
   ) {
-    const granted = await requestPermissions(
-      this.props.permissionDialogTitle,
-      this.props.permissionDialogMessage
-    );
-    if (granted) {
       UIManager.dispatchViewManagerCommand(this._handle, config.Commands.save, [
         imageType,
         folder,
@@ -296,7 +292,6 @@ class SketchCanvas extends React.Component {
         includeText,
         cropToImageSize,
       ]);
-    }
   }
 
   getPaths() {
@@ -322,15 +317,13 @@ class SketchCanvas extends React.Component {
         callback
       );
     } else {
-      NativeModules.SketchCanvasModule.transferToBase64(
-        this._handle,
+      UIManager.dispatchViewManagerCommand(this._handle, config.Commands.transferToBase64Android, [
         imageType,
         transparent,
         includeImage,
         includeText,
         cropToImageSize,
-        callback
-      );
+      ]);
     }
   }
 

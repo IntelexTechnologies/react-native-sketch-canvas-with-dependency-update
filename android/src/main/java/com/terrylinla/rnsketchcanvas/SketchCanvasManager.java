@@ -1,5 +1,10 @@
 package com.terrylinla.rnsketchcanvas;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
+import java.io.IOException;
+
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +13,7 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.util.Log;
+import android.os.Environment;
 
 import com.facebook.common.logging.FLog;
 import com.facebook.react.bridge.Callback;
@@ -36,6 +42,7 @@ public class SketchCanvasManager extends SimpleViewManager<SketchCanvas> {
     public static final int COMMAND_DELETE_PATH = 5;
     public static final int COMMAND_SAVE = 6;
     public static final int COMMAND_END_PATH = 7;
+    public static final int COMMAND_TRANSFER_BASE64 = 8;
 
     public static SketchCanvas Canvas = null;
 
@@ -80,6 +87,7 @@ public class SketchCanvasManager extends SimpleViewManager<SketchCanvas> {
         map.put("deletePath", COMMAND_DELETE_PATH);
         map.put("save", COMMAND_SAVE);
         map.put("endPath", COMMAND_END_PATH);
+        map.put("transferToBase64Android", COMMAND_TRANSFER_BASE64);
 
         return map;
     }
@@ -90,7 +98,12 @@ public class SketchCanvasManager extends SimpleViewManager<SketchCanvas> {
     }
 
     @Override
-    public void receiveCommand(SketchCanvas view, int commandType, @Nullable ReadableArray args) {
+    public void receiveCommand(SketchCanvas view, String commandType, @Nullable ReadableArray args) {
+        receiveCommand(view, Integer.parseInt(commandType), args);
+    }
+
+    @Override
+    public void receiveCommand(SketchCanvas view, int commandType, @Nullable ReadableArray args){
         switch (commandType) {
             case COMMAND_ADD_POINT: {
                 view.addPoint((float)args.getDouble(0), (float)args.getDouble(1));
@@ -124,6 +137,32 @@ public class SketchCanvasManager extends SimpleViewManager<SketchCanvas> {
             }
             case COMMAND_END_PATH: {
                 view.end();
+                return;
+            }
+            case COMMAND_TRANSFER_BASE64: {
+                Context context = view.getContext();
+                BufferedWriter writer = null;
+                try{
+                    String filename = "sigTemp.txt";
+                    String base64 = view.getBase64(args.getString(0), args.getBoolean(1), args.getBoolean(2), args.getBoolean(3), args.getBoolean(4));
+                    File file = new File(context.getExternalCacheDir() + File.separator + filename);
+                    if(file.exists()){
+                        file.delete();
+                    }
+                    file.createNewFile();
+                    writer = new BufferedWriter(new FileWriter(file));
+                    writer.write(base64);
+                    file.deleteOnExit();
+                }
+                catch(IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        writer.close();
+                    } catch(IOException e) {
+                        e.printStackTrace();
+                    }
+                }
                 return;
             }
             default:
