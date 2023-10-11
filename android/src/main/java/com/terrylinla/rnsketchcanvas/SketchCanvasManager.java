@@ -145,7 +145,7 @@ public class SketchCanvasManager extends SimpleViewManager<SketchCanvas> {
                 try{
                     String filename = "sigTemp.txt";
                     String base64 = view.getBase64(args.getString(0), args.getBoolean(1), args.getBoolean(2), args.getBoolean(3), args.getBoolean(4));
-                    File file = new File(context.getExternalCacheDir() + File.separator + filename);
+                    File file = new File(context.getCacheDir() + File.separator + filename);
                     if(file.exists()){
                         file.delete();
                     }
