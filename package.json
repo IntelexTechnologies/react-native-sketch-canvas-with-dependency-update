@@ -1,5 +1,5 @@
 {
-  "name": "@intelex/react-native-sketch-canvas",
+  "name": "react-native-sketch-canvas-with-fabric",
   "repository": {
     "type": "git",
     "url": "https://github.com/IntelexTechnologies/react-native-sketch-canvas-with-dependency-update"
@@ -8,7 +8,6 @@
   "description": "react-native-sketch-canvas allows you to draw / sketch on both iOS and Android devices and sync the drawing data between users. Of course you can save as image.",
   "author": "Terry Lin",
   "main": "index.js",
-  "type": "module",
   "keywords": [
     "react-native",
     "react-native-sketch",
